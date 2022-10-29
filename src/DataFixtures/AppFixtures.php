@@ -57,9 +57,11 @@ class AppFixtures extends Fixture
             $project = new Project();
             $project->setTitle("Title Project $i")
                 ->setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed")
-                ->setFilenameOrUrl("files/$filename")
-                ->setImage("images/$imageName")
+                ->setFilenameOrUrl("$filename")
+                ->setImage("$imageName")
                 ->setStatus(self::STATUS[mt_rand(0, 2)])
+                ->setCcreatedAt(new \Datetime())
+                ->setUpdatedAt(new \Datetime())
                 ->setNumberOfTasks(mt_rand(1, 10));
             $manager->persist($project);
         }

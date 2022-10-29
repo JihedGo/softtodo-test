@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/project')]
 class ProjectController extends AbstractController
 {
+
     #[Route('/', name: 'app_project_index', methods: ['GET'])]
     public function index(ProjectRepository $projectRepository): Response
     {
@@ -25,6 +26,8 @@ class ProjectController extends AbstractController
     public function new(Request $request, ProjectRepository $projectRepository): Response
     {
         $project = new Project();
+        $project->setCcreatedAt(new \Datetime());
+        $project->setUpdatedAt(new \Datetime());
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
@@ -69,7 +72,7 @@ class ProjectController extends AbstractController
     #[Route('/{id}', name: 'app_project_delete', methods: ['POST'])]
     public function delete(Request $request, Project $project, ProjectRepository $projectRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$project->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $project->getId(), $request->request->get('_token'))) {
             $projectRepository->remove($project, true);
         }
 

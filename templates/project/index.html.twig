@@ -1,45 +1,72 @@
-{% extends 'base.html.twig' %}
+{% extends 'dashboard/dashboard.html.twig' %}
 
-{% block title %}Project index{% endblock %}
+{% block title %}Project List
+{% endblock %}
 
-{% block body %}
-    <h1>Project index</h1>
+{% block main %}
+	<main>
+		<div class="container-fluid px-4">
+			<h1 class="mt-4">Manage Projects</h1>
+			<a href="{{ path('app_project_new') }}" class="btn btn-sm btn-primary mt-5">
+				<i class="fa fa-plus"></i>
+				&nbsp; Add New Project</a>
+			<div class="card mb-4">
+				<div class="card-header">
+					<i class="fas fa-table me-1"></i>
+					Projects List
+				</div>
+				<div class="card-body">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Image</th>
-                <th>FilenameOrUrl</th>
-                <th>NumberOfTasks</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for project in projects %}
-            <tr>
-                <td>{{ project.id }}</td>
-                <td>{{ project.title }}</td>
-                <td>{{ project.image }}</td>
-                <td>{{ project.filenameOrUrl }}</td>
-                <td>{{ project.numberOfTasks }}</td>
-                <td>{{ project.description }}</td>
-                <td>{{ project.status }}</td>
-                <td>
-                    <a href="{{ path('app_project_show', {'id': project.id}) }}">show</a>
-                    <a href="{{ path('app_project_edit', {'id': project.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+					<table id="datatablesSimple">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Title</th>
+								<th>Number of tasks</th>
+								<th>Status</th>
+								{% if app.user.role == "ROLE_ADMIN" %}
+									<th>Actions</th>
+								{% endif %}
+							</tr>
+						</thead>
+						<tbody>
+							{% for p in projects %}
+								<tr class="text-center">
+									<td>
 
-    <a href="{{ path('app_project_new') }}">Create new</a>
+										<img height="100px" width="100px" src="{{ asset('images/'~p.image) }}" alt="{{ p.title|replace({' ': '-'}) }}"/>
+									</td>
+									<td>{{ p.title }}</td>
+									<td>{{ p.numberOfTasks }}</td>
+									<td>
+										{% if p.status == "DONE" %}
+											<span class="badge bg-success">Done</span>
+										{% elseif p.status == "BLOCKED" %}
+											<span class="badge bg-danger">blocked</span>
+										{% else %}
+											<span class="badge bg-warning text-dark">in progress</span>
+										{% endif %}
+									</td>
+									<td>
+										{% if app.user.role == "ROLE_ADMIN" %}
+											<a href="{{ path('app_project_show', {"id": p.id}) }}" class="btn btn-outline-primary" title="more details">
+												<i class="fa fa-eye"></i>
+											</a>
+											<a href="{{ path('app_project_edit', {"id": p.id}) }}" class="btn btn-outline-warning text-dark" title="edit">
+												<i class="fa fa-edit"></i>
+											</a>
+
+										{% endif %}
+									</td>
+								</tr>
+							{% endfor %}
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</main>
+
+
 {% endblock %}
